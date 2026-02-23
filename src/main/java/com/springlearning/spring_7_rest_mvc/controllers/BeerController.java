@@ -22,10 +22,11 @@ import com.springlearning.spring_7_rest_mvc.model.Beer;
 import com.springlearning.spring_7_rest_mvc.services.BeerService;
 
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-@AllArgsConstructor
+@RequiredArgsConstructor
 //@Controller
 @RestController
 @RequestMapping("api/v1/beer")
