@@ -20,9 +20,10 @@ import com.springlearning.spring_7_rest_mvc.model.Customer;
 import com.springlearning.spring_7_rest_mvc.services.CustomerService;
 
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 @RestController
-@AllArgsConstructor
+@RequiredArgsConstructor
 @RequestMapping("api/v1/customer")
 public class CustomerController {
 
