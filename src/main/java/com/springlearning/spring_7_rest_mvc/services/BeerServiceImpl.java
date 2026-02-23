@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import com.springlearning.spring_7_rest_mvc.model.Beer;
 import com.springlearning.spring_7_rest_mvc.model.BeerStyle;
@@ -108,6 +109,27 @@ public class BeerServiceImpl implements BeerService{
 	public void deleteBeerBbyId(UUID beerId) {
 		beerMap.remove(beerId);
 	}
+
+	@Override
+	public void patchBeerById(UUID beerId, Beer beer) {
+		Beer existingBeer = beerMap.get(beerId);
+		if(StringUtils.hasText(beer.getBeerName())) {
+			existingBeer.setBeerName(beer.getBeerName());
+		}
+		if(beer.getBeerStyle() != null) {
+			existingBeer.setBeerStyle(beer.getBeerStyle());
+		}
+		if(beer.getPrice() != null) {
+			existingBeer.setPrice(beer.getPrice());
+		}
+		if(beer.getQuantityOnHand() != null) {
+			existingBeer.setQuantityOnHand(beer.getQuantityOnHand());
+		}
+		if(StringUtils.hasText(beer.getUpc())) {
+			existingBeer.setUpc(beer.getUpc());
+		}
+	}
+	
 
 //	@Override
 //	public Beer getBeerById(UUID id) {
