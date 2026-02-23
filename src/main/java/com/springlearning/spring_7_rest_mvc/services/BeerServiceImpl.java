@@ -92,6 +92,18 @@ public class BeerServiceImpl implements BeerService{
 		return savedBeer;
 	}
 
+	@Override
+	public void updateBeerById(UUID beerId, Beer beer) {
+		Beer existingBeer = beerMap.get(beerId);
+		existingBeer.setBeerName(beer.getBeerName());
+		existingBeer.setPrice(beer.getPrice());
+		existingBeer.setUpc(beer.getUpc());
+		existingBeer.setQuantityOnHand(beer.getQuantityOnHand());
+		
+		beerMap.put(existingBeer.getId(), existingBeer);
+		
+	}
+
 //	@Override
 //	public Beer getBeerById(UUID id) {
 //		log.debug("Get Beer Id in service was called");
