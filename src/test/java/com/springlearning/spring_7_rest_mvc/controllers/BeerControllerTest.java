@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.web.WebProperties.Resources.Chain.Strategy.Content;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -25,10 +26,12 @@ import com.springlearning.spring_7_rest_mvc.model.Beer;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
@@ -110,6 +113,19 @@ public class BeerControllerTest {
 		        .andExpect(status().isNoContent());
 		
 		verify(beerService).updateBeerById(any(UUID.class), any(Beer.class));
+	}
+	
+	@Test
+	void testdeleteBeer() throws Exception {
+		Beer beer = beerServiceImpl.listBeers().get(0);
+		
+		mockMvc.perform(delete("/api/v1/beer/" + beer.getId())
+				.accept(MediaType.APPLICATION_JSON))
+		.andExpect(status().isNoContent());
+		ArgumentCaptor<UUID> uuidArgumentCaptor = ArgumentCaptor.forClass(UUID.class);
+		verify(beerService).deleteBeerBbyId(uuidArgumentCaptor.capture());
+		
+		assertThat(beer.getId()).isEqualTo(uuidArgumentCaptor.getValue());
 	}
 	
 	
