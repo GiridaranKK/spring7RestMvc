@@ -16,12 +16,12 @@ import tools.jackson.databind.annotation.JsonDeserialize;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@JsonDeserialize(builder = Beer.BeerBuilder.class)
+//@JsonDeserialize(builder = Beer.BeerBuilder.class)
 public class Beer {
 
 	private UUID id;
 	private Integer version;
-	@JsonProperty("beerName")
+//	@JsonProperty("beerName")
 	private String beerName;
 	private BeerStyle beerStyle;
 	private String upc;
