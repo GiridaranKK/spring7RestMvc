@@ -18,6 +18,7 @@ import tools.jackson.databind.ObjectMapper;
 import com.springlearning.spring_7_rest_mvc.model.Customer;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -27,6 +28,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.hamcrest.core.Is.is;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.verify;
 
 import java.util.UUID;
 
@@ -87,5 +89,18 @@ public class CustomerControllerTest {
 				.content(objectMapper.writeValueAsString(customer)))
 		        .andExpect(status().isCreated())
 		        .andExpect(header().exists("Location"));
+	}
+	
+	@Test
+	void updateCustomerById() throws JacksonException, Exception {
+		Customer customer = customerServiceImpl.listCustomers().get(0);
+		
+		mockMvc.perform(put("/api/v1/customer/" + customer.getId())
+				.accept(MediaType.APPLICATION_JSON)
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(customer)))
+				.andExpect(status().isNoContent());
+		
+		verify(customerService).updateCustomer(any(UUID.class), any(Customer.class));
 	}
 }
