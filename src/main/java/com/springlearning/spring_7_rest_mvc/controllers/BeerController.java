@@ -86,11 +86,11 @@ public class BeerController {
 		return new ResponseEntity(HttpStatus.NO_CONTENT);
 	}
 	
-	@ExceptionHandler(NotFoundException.class)
-	public ResponseEntity handleNotFoundException() {
-		System.out.println("In Exception Handler");
-		return ResponseEntity.notFound().build();
-		
-	}
+//	@ExceptionHandler(NotFoundException.class)
+//	public ResponseEntity handleNotFoundException() {
+//		System.out.println("In Exception Handler");
+//		return ResponseEntity.notFound().build();
+//		
+//	}
 	
 }
