@@ -38,6 +38,7 @@ import static org.mockito.Mockito.verify;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 @WebMvcTest(CustomerController.class)
@@ -70,7 +71,7 @@ public class CustomerControllerTest {
 	void getCustomerById() throws Exception {
 		Customer testCustomer = customerServiceImpl.listCustomers().get(0);
 		
-		given(customerService.getCustomerById(testCustomer.getId())).willReturn(testCustomer);
+		given(customerService.getCustomerById(testCustomer.getId())).willReturn(Optional.of(testCustomer));
 		mockMvc.perform(get(CustomerController.CUSTOMER_PATH_ID,testCustomer.getId())
 				.accept(MediaType.APPLICATION_JSON))
 		        .andExpect(status().isOk())
@@ -148,5 +149,13 @@ public class CustomerControllerTest {
 		verify(customerService).patchCustomerById(uuidArgumentCaptor.capture(), customerArgumentCaptor.capture());
 		assertThat(customer.getId()).isEqualTo(uuidArgumentCaptor.getValue());
 		assertThat(customerMap.get("customerName")).isEqualTo(customerArgumentCaptor.getValue().getCustomerName());
+	}
+	
+	@Test
+	void customerByIdNotFound() throws Exception {
+		
+		given(customerService.getCustomerById(any(UUID.class))).willReturn(Optional.empty());
+		mockMvc.perform(get(CustomerController.CUSTOMER_PATH_ID,UUID.randomUUID()))
+		.andExpect(status().isNotFound());
 	}
 }
