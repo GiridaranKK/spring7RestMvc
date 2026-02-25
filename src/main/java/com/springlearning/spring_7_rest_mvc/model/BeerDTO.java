@@ -17,7 +17,7 @@ import tools.jackson.databind.annotation.JsonDeserialize;
 @NoArgsConstructor
 @AllArgsConstructor
 //@JsonDeserialize(builder = Beer.BeerBuilder.class)
-public class Beer {
+public class BeerDTO {
 
 	private UUID id;
 	private Integer version;

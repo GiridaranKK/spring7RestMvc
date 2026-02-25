@@ -12,7 +12,7 @@ import java.util.UUID;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import com.springlearning.spring_7_rest_mvc.model.Beer;
+import com.springlearning.spring_7_rest_mvc.model.BeerDTO;
 import com.springlearning.spring_7_rest_mvc.model.BeerStyle;
 
 import lombok.extern.slf4j.Slf4j;
@@ -21,12 +21,12 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class BeerServiceImpl implements BeerService{
 	
-	private Map<UUID, Beer> beerMap;
+	private Map<UUID, BeerDTO> beerMap;
 
 	public BeerServiceImpl() {
 		this.beerMap = new HashMap<>();
 		
-		Beer beer1 = Beer.builder()
+		BeerDTO beer1 = BeerDTO.builder()
 				.id(UUID.randomUUID())
 				.version(1)
 				.beerName("beername1")
@@ -37,7 +37,7 @@ public class BeerServiceImpl implements BeerService{
 				.createdDate(LocalDateTime.now())
 				.updatedDate(LocalDateTime.now())
 				.build();
-		Beer beer2 = Beer.builder()
+		BeerDTO beer2 = BeerDTO.builder()
 				.id(UUID.randomUUID())
 				.version(1)
 				.beerName("beername2")
@@ -48,7 +48,7 @@ public class BeerServiceImpl implements BeerService{
 				.createdDate(LocalDateTime.now())
 				.updatedDate(LocalDateTime.now())
 				.build();
-		Beer beer3 = Beer.builder()
+		BeerDTO beer3 = BeerDTO.builder()
 				.id(UUID.randomUUID())
 				.version(1)
 				.beerName("beername3")
@@ -66,26 +66,26 @@ public class BeerServiceImpl implements BeerService{
 	}
 	
 	@Override
-	public List<Beer> listBeers(){
+	public List<BeerDTO> listBeers(){
 		return new ArrayList<>(beerMap.values());
 	}
 	
 	@Override
-	public Optional<Beer> getBeerById(UUID id){
+	public Optional<BeerDTO> getBeerById(UUID id){
 		return Optional.of(beerMap.get(id));
 	}
 
 	@Override
-	public Beer saveNewBeer(Beer beer) {
+	public BeerDTO saveNewBeer(BeerDTO beerDTO) {
 		
-		Beer savedBeer = Beer.builder()
+		BeerDTO savedBeer = BeerDTO.builder()
 				.id(UUID.randomUUID())
 				.version(1)
-				.beerName(beer.getBeerName())
-				.beerStyle(beer.getBeerStyle())
-				.upc(beer.getUpc())
-				.quantityOnHand(beer.getQuantityOnHand())
-				.price(beer.getPrice())
+				.beerName(beerDTO.getBeerName())
+				.beerStyle(beerDTO.getBeerStyle())
+				.upc(beerDTO.getUpc())
+				.quantityOnHand(beerDTO.getQuantityOnHand())
+				.price(beerDTO.getPrice())
 				.createdDate(LocalDateTime.now())
 				.updatedDate(LocalDateTime.now())
 				.build();
@@ -95,12 +95,12 @@ public class BeerServiceImpl implements BeerService{
 	}
 
 	@Override
-	public void updateBeerById(UUID beerId, Beer beer) {
-		Beer existingBeer = beerMap.get(beerId);
-		existingBeer.setBeerName(beer.getBeerName());
-		existingBeer.setPrice(beer.getPrice());
-		existingBeer.setUpc(beer.getUpc());
-		existingBeer.setQuantityOnHand(beer.getQuantityOnHand());
+	public void updateBeerById(UUID beerId, BeerDTO beerDTO) {
+		BeerDTO existingBeer = beerMap.get(beerId);
+		existingBeer.setBeerName(beerDTO.getBeerName());
+		existingBeer.setPrice(beerDTO.getPrice());
+		existingBeer.setUpc(beerDTO.getUpc());
+		existingBeer.setQuantityOnHand(beerDTO.getQuantityOnHand());
 		
 		beerMap.put(existingBeer.getId(), existingBeer);
 		
@@ -112,22 +112,22 @@ public class BeerServiceImpl implements BeerService{
 	}
 
 	@Override
-	public void patchBeerById(UUID beerId, Beer beer) {
-		Beer existingBeer = beerMap.get(beerId);
-		if(StringUtils.hasText(beer.getBeerName())) {
-			existingBeer.setBeerName(beer.getBeerName());
+	public void patchBeerById(UUID beerId, BeerDTO beerDTO) {
+		BeerDTO existingBeer = beerMap.get(beerId);
+		if(StringUtils.hasText(beerDTO.getBeerName())) {
+			existingBeer.setBeerName(beerDTO.getBeerName());
 		}
-		if(beer.getBeerStyle() != null) {
-			existingBeer.setBeerStyle(beer.getBeerStyle());
+		if(beerDTO.getBeerStyle() != null) {
+			existingBeer.setBeerStyle(beerDTO.getBeerStyle());
 		}
-		if(beer.getPrice() != null) {
-			existingBeer.setPrice(beer.getPrice());
+		if(beerDTO.getPrice() != null) {
+			existingBeer.setPrice(beerDTO.getPrice());
 		}
-		if(beer.getQuantityOnHand() != null) {
-			existingBeer.setQuantityOnHand(beer.getQuantityOnHand());
+		if(beerDTO.getQuantityOnHand() != null) {
+			existingBeer.setQuantityOnHand(beerDTO.getQuantityOnHand());
 		}
-		if(StringUtils.hasText(beer.getUpc())) {
-			existingBeer.setUpc(beer.getUpc());
+		if(StringUtils.hasText(beerDTO.getUpc())) {
+			existingBeer.setUpc(beerDTO.getUpc());
 		}
 	}
 	

@@ -4,13 +4,13 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import com.springlearning.spring_7_rest_mvc.model.Customer;
+import com.springlearning.spring_7_rest_mvc.model.CustomerDTO;
 
 public interface CustomerService {
-	List<Customer> listCustomers();
-	Optional<Customer> getCustomerById(UUID id);
-	Customer saveCustomer(Customer customer);
-	void updateCustomer(UUID customerId, Customer customer);
+	List<CustomerDTO> listCustomers();
+	Optional<CustomerDTO> getCustomerById(UUID id);
+	CustomerDTO saveCustomer(CustomerDTO customerDTO);
+	void updateCustomer(UUID customerId, CustomerDTO customerDTO);
 	void deleteCustomerById(UUID customerId);
-	void patchCustomerById(UUID customerId, Customer customer);
+	void patchCustomerById(UUID customerId, CustomerDTO customerDTO);
 }
