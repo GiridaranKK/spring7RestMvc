@@ -5,7 +5,7 @@ import org.mapstruct.Mapper;
 import com.springlearning.spring_7_rest_mvc.entities.Customer;
 import com.springlearning.spring_7_rest_mvc.model.CustomerDTO;
 
-@Mapper
+@Mapper(componentModel = "spring")
 public interface CustomerMapper {
 
 	Customer customerDtoToCustomer(CustomerDTO dto);
