@@ -3,10 +3,12 @@ package com.springlearning.spring_7_rest_mvc.services;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
+import com.springlearning.spring_7_rest_mvc.mappers.BeerMapper;
 import com.springlearning.spring_7_rest_mvc.mappers.CustomerMapper;
 import com.springlearning.spring_7_rest_mvc.model.CustomerDTO;
 import com.springlearning.spring_7_rest_mvc.repositories.CustomerRepository;
@@ -24,13 +26,16 @@ public class CustomerServiceJPA implements CustomerService{
 	@Override
 	public List<CustomerDTO> listCustomers() {
 		// TODO Auto-generated method stub
-		return null;
+		return customerRepository.findAll()
+				.stream()
+				.map(customerMapper :: customerToCustomerDto)
+				.collect(Collectors.toList());
 	}
 
 	@Override
 	public Optional<CustomerDTO> getCustomerById(UUID id) {
 		// TODO Auto-generated method stub
-		return Optional.empty();
+		return Optional.ofNullable(customerMapper.customerToCustomerDto(customerRepository.findById(id).orElse(null)));
 	}
 
 	@Override
