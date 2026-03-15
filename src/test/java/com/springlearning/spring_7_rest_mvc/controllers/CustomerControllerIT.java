@@ -111,4 +111,19 @@ public class CustomerControllerIT {
 			controller.updateCustomer(UUID.randomUUID(), CustomerDTO.builder().build());
 		});
 	}
+	
+	@Test
+	void deleteById() {
+		Customer customer = customerRepository.findAll().get(0);
+		ResponseEntity responseEntity = controller.deleteById(customer.getId());
+		assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatusCode.valueOf(204));
+		assertThat(customerRepository.findById(customer.getId()).isEmpty());
+	}
+	
+	@Test
+	void deleteNotFound() {
+		assertThrows(NotFoundException.class, () -> {
+			controller.deleteById(UUID.randomUUID());
+		});
+	}
 }
