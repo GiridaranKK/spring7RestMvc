@@ -41,7 +41,7 @@ public class CustomerServiceJPA implements CustomerService{
 	@Override
 	public CustomerDTO saveCustomer(CustomerDTO customerDTO) {
 		// TODO Auto-generated method stub
-		return null;
+		return customerMapper.customerToCustomerDto(customerRepository.save(customerMapper.customerDtoToCustomer(customerDTO)));
 	}
 
 	@Override

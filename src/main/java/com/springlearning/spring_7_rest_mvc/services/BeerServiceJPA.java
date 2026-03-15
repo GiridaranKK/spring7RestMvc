@@ -43,7 +43,7 @@ public class BeerServiceJPA implements BeerService {
 	@Override
 	public BeerDTO saveNewBeer(BeerDTO beerDTO) {
 		// TODO Auto-generated method stub
-		return null;
+		return beerMapper.BeerToBeerDto(beerRepository.save(beerMapper.beerDtoToBeer(beerDTO)));
 	}
 
 	@Override
