@@ -8,6 +8,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -58,7 +59,7 @@ public class BeerController {
 	
 	@PostMapping(BEER_PATH)
 //	@RequestMapping(method = RequestMethod.POST)
-	public ResponseEntity handlePost(@RequestBody BeerDTO beerDTO) {
+	public ResponseEntity handlePost(@Validated @RequestBody BeerDTO beerDTO) {
 		BeerDTO savedBeer = beerService.saveNewBeer(beerDTO);
 		HttpHeaders headers = new HttpHeaders();
 		headers.add("Location", "/api/v1/beer/"+savedBeer.getId().toString());

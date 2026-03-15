@@ -19,6 +19,7 @@ import com.springlearning.spring_7_rest_mvc.services.CustomerServiceImpl;
 import tools.jackson.core.JacksonException;
 import tools.jackson.databind.ObjectMapper;
 
+import com.springlearning.spring_7_rest_mvc.mappers.CustomerMapper;
 import com.springlearning.spring_7_rest_mvc.model.CustomerDTO;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -159,5 +160,18 @@ public class CustomerControllerTest {
 		given(customerService.getCustomerById(any(UUID.class))).willReturn(Optional.empty());
 		mockMvc.perform(get(CustomerController.CUSTOMER_PATH_ID,UUID.randomUUID()))
 		.andExpect(status().isNotFound());
+	}
+	
+	@Test
+	void createCustomerNull() throws Exception {
+		CustomerDTO customerDTO = CustomerDTO.builder().build();
+		
+		given(customerService.saveCustomer(any(CustomerDTO.class))).willReturn(customerServiceImpl.listCustomers().get(1));
+		
+		mockMvc.perform(post(CustomerController.CUSTOMER_PATH)
+				.accept(MediaType.APPLICATION_JSON)
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(customerDTO))
+				).andExpect(status().isBadRequest());
 	}
 }

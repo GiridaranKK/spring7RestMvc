@@ -6,6 +6,7 @@ import java.util.UUID;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -45,7 +46,7 @@ public class CustomerController {
 	}
 	
 	@PostMapping(CUSTOMER_PATH)
-	public ResponseEntity saveCustomer(@RequestBody CustomerDTO customerDTO) {
+	public ResponseEntity saveCustomer(@Validated @RequestBody CustomerDTO customerDTO) {
 		CustomerDTO savedCustomer = customerService.saveCustomer(customerDTO);
 		HttpHeaders headers = new HttpHeaders();
 		headers.add("Location", "/api/v1/customer/" + savedCustomer.getId().toString());
