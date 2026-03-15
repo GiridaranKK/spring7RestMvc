@@ -11,6 +11,7 @@ import java.util.UUID;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import com.springlearning.spring_7_rest_mvc.entities.Customer;
 import com.springlearning.spring_7_rest_mvc.model.CustomerDTO;
 
 import lombok.AllArgsConstructor;
@@ -76,10 +77,11 @@ public class CustomerServiceImpl implements CustomerService{
 	}
 
 	@Override
-	public void updateCustomer(UUID customerId, CustomerDTO customerDTO) {
+	public Optional<CustomerDTO> updateCustomer(UUID customerId, CustomerDTO customerDTO) {
 		CustomerDTO existingCustomer = customerMap.get(customerId);
 		existingCustomer.setCustomerName(customerDTO.getCustomerName());  
 		customerMap.put(existingCustomer.getId(), existingCustomer);
+		return Optional.of(existingCustomer);
 	}
 
 	@Override

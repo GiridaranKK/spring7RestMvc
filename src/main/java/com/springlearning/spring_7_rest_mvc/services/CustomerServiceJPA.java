@@ -3,6 +3,7 @@ package com.springlearning.spring_7_rest_mvc.services;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
 import org.springframework.context.annotation.Primary;
@@ -45,8 +46,16 @@ public class CustomerServiceJPA implements CustomerService{
 	}
 
 	@Override
-	public void updateCustomer(UUID customerId, CustomerDTO customerDTO) {
-		// TODO Auto-generated method stub
+	public Optional<CustomerDTO> updateCustomer(UUID customerId, CustomerDTO customerDTO) {
+		
+		AtomicReference<Optional<CustomerDTO>> atomicReference = new AtomicReference<>();
+		customerRepository.findById(customerId).ifPresentOrElse(foundCustomer -> {
+			foundCustomer.setCustomerName(customerDTO.getCustomerName());
+			atomicReference.set(Optional.of(customerMapper.customerToCustomerDto(customerRepository.save(foundCustomer))));
+		}, () ->{
+			atomicReference.set(Optional.empty());
+		});
+		return atomicReference.get();
 		
 	}
 

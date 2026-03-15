@@ -32,6 +32,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.core.Is.is;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
@@ -111,6 +112,7 @@ public class CustomerControllerTest {
 	void updateCustomerById() throws JacksonException, Exception {
 		CustomerDTO customerDTO = customerServiceImpl.listCustomers().get(0);
 		
+		given(customerService.updateCustomer(any(), any())).willReturn(Optional.of(customerDTO));
 		mockMvc.perform(put(CustomerController.CUSTOMER_PATH_ID,customerDTO.getId())
 				.accept(MediaType.APPLICATION_JSON)
 				.contentType(MediaType.APPLICATION_JSON)

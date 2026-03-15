@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.Rollback;
 
 import com.springlearning.spring_7_rest_mvc.entities.Customer;
+import com.springlearning.spring_7_rest_mvc.mappers.CustomerMapper;
 import com.springlearning.spring_7_rest_mvc.model.BeerDTO;
 import com.springlearning.spring_7_rest_mvc.model.CustomerDTO;
 import com.springlearning.spring_7_rest_mvc.repositories.CustomerRepository;
@@ -28,6 +29,9 @@ public class CustomerControllerIT {
 	
 	@Autowired
 	CustomerRepository customerRepository;
+	
+	@Autowired
+	CustomerMapper customerMapper;
 	
 	@Test
 	void testListCustomers() {
@@ -82,5 +86,29 @@ public class CustomerControllerIT {
 		
 		Customer customer = customerRepository.findById(uuid).get();
 		assertThat(customer).isNotNull();
+	}
+	
+	@Test
+	void updateCustomerById() {
+		Customer customer = customerRepository.findAll().get(0);
+		CustomerDTO  customerDTO = customerMapper.customerToCustomerDto(customer);
+		
+		customerDTO.setId(null);
+		customerDTO.setVersion(null);
+		final String customerName = "UPDATED"; 
+		customerDTO.setCustomerName(customerName);
+		
+		ResponseEntity responseEntity = controller.updateCustomer(customer.getId(), customerDTO);
+		assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatusCode.valueOf(204));
+		
+		Customer updatedCustomer = customerRepository.findById(customer.getId()).get();
+		assertThat(updatedCustomer.getCustomerName()).isEqualTo(customerName);
+	}
+	
+	@Test
+	void updateNotFound() {
+		assertThrows(NotFoundException.class, () -> {
+			controller.updateCustomer(UUID.randomUUID(), CustomerDTO.builder().build());
+		});
 	}
 }

@@ -3,6 +3,7 @@ package com.springlearning.spring_7_rest_mvc.controllers;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import java.lang.annotation.Inherited;
 import java.util.List;
 import java.util.UUID;
 
@@ -15,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.Rollback;
 
 import com.springlearning.spring_7_rest_mvc.entities.Beer;
+import com.springlearning.spring_7_rest_mvc.mappers.BeerMapper;
 import com.springlearning.spring_7_rest_mvc.model.BeerDTO;
 import com.springlearning.spring_7_rest_mvc.repositories.BeerRepository;
 
@@ -28,6 +30,9 @@ public class BeerControllerIT {
 	
 	@Autowired
 	BeerRepository beerRepository;
+	
+	@Autowired
+	BeerMapper beerMapper;
 	
 	@Test
 	void testListBeers() {
@@ -79,5 +84,27 @@ public class BeerControllerIT {
 		
 		Beer beer = beerRepository.findById(savedUUID).get();
 		assertThat(beer).isNotNull();
+	}
+	
+	@Test
+	void updateBeerByID() {
+		Beer beer = beerRepository.findAll().get(0);
+		BeerDTO beerDTO = beerMapper.BeerToBeerDto(beer);
+		beerDTO.setId(null);
+		beerDTO.setVersion(null);
+		final String beerName = "UPDATED";
+		beerDTO.setBeerName(beerName);
+		
+		ResponseEntity responseEntity = beerController.updateById(beer.getId(), beerDTO);
+		assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatusCode.valueOf(204));
+		Beer updatedBeer = beerRepository.findById(beer.getId()).get();
+		assertThat(updatedBeer.getBeerName()).isEqualTo(beerName);
+	}
+	
+	@Test
+	void updateNotFound() {
+		assertThrows(NotFoundException.class, () -> {
+			beerController.updateById(UUID.randomUUID(), BeerDTO.builder().build());
+		});
 	}
 }
