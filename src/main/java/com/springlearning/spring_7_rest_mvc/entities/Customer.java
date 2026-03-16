@@ -11,6 +11,9 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.Version;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -32,6 +35,10 @@ public class Customer {
 	@UuidGenerator
 	@Column(length = 36, columnDefinition = "varchar", updatable = false, nullable = false)
 	private UUID id;
+	@NotBlank
+	@NotNull
+	@Size(max = 60)
+	@Column(length = 60)
 	private String customerName;
 	@Version
 	private Integer version;
