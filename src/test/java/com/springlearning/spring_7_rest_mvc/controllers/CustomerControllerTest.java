@@ -11,6 +11,7 @@ import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 
 import com.springlearning.spring_7_rest_mvc.services.BeerServiceImpl;
 import com.springlearning.spring_7_rest_mvc.services.CustomerService;
@@ -124,6 +125,21 @@ public class CustomerControllerTest {
 	}
 	
 	@Test
+	void updateCustomerByIdNull() throws JacksonException, Exception {
+		CustomerDTO customerDTO = customerServiceImpl.listCustomers().get(0);
+		customerDTO.setCustomerName(null);
+		given(customerService.updateCustomer(any(), any())).willReturn(Optional.of(customerDTO));
+		mockMvc.perform(put(CustomerController.CUSTOMER_PATH_ID,customerDTO.getId())
+				.accept(MediaType.APPLICATION_JSON)
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(customerDTO)))
+				.andExpect(status().isBadRequest())
+				.andExpect(jsonPath("$.length()", is(2)));
+		
+//		verify(customerService).updateCustomer(any(UUID.class), any(CustomerDTO.class));
+	}
+	
+	@Test
 	void deleteCustomerById() throws Exception {
 		CustomerDTO customerDTO = customerServiceImpl.listCustomers().get(0);
 		given(customerService.deleteCustomerById(any())).willReturn(true);
@@ -168,10 +184,12 @@ public class CustomerControllerTest {
 		
 		given(customerService.saveCustomer(any(CustomerDTO.class))).willReturn(customerServiceImpl.listCustomers().get(1));
 		
-		mockMvc.perform(post(CustomerController.CUSTOMER_PATH)
+		MvcResult resultMvc =  mockMvc.perform(post(CustomerController.CUSTOMER_PATH)
 				.accept(MediaType.APPLICATION_JSON)
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(objectMapper.writeValueAsString(customerDTO))
-				).andExpect(status().isBadRequest());
+				).andExpect(status().isBadRequest()).andReturn();
+		
+		System.out.println(resultMvc.getResponse().getContentAsString());
 	}
 }

@@ -133,6 +133,21 @@ public class BeerControllerTest {
 	}
 	
 	@Test
+	void testUpdateBeerEmptyName() throws JacksonException, Exception {
+		BeerDTO beerDTO = beerServiceImpl.listBeers().get(0);
+		beerDTO.setBeerName("");
+		given(beerService.updateBeerById(any(), any())).willReturn(Optional.of(beerDTO));
+		mockMvc.perform(put(BeerController.BEER_PATH_ID,beerDTO.getId())
+				.accept(MediaType.APPLICATION_JSON)
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(beerDTO)))
+		        .andExpect(status().isBadRequest())
+		        .andExpect(jsonPath("$.length()", is(1)));
+		
+//		verify(beerService).updateBeerById(any(UUID.class), any(BeerDTO.class));
+	}
+	
+	@Test
 	void testdeleteBeer() throws Exception {
 		BeerDTO beerDTO = beerServiceImpl.listBeers().get(0);
 		
@@ -182,6 +197,7 @@ public class BeerControllerTest {
 				.accept(MediaType.APPLICATION_JSON)
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(objectMapper.writeValueAsString(beerDTO)))
+				.andExpect(jsonPath("$.length()", is(6)))
 				.andExpect(status().isBadRequest()).andReturn();
 		
 		System.out.println(mvcResult.getResponse().getContentAsString());

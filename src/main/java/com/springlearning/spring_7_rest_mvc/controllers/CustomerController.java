@@ -55,7 +55,7 @@ public class CustomerController {
 	}
 	
 	@PutMapping(CUSTOMER_PATH_ID)
-	public ResponseEntity updateCustomer(@PathVariable("customerId") UUID customerId,@RequestBody CustomerDTO customerDTO) {
+	public ResponseEntity updateCustomer(@PathVariable("customerId") UUID customerId,@Validated @RequestBody CustomerDTO customerDTO) {
 		if(customerService.updateCustomer(customerId,customerDTO).isEmpty()) {
 			throw new NotFoundException();
 		}
