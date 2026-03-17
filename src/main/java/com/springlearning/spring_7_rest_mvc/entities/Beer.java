@@ -1,11 +1,14 @@
 package com.springlearning.spring_7_rest_mvc.entities;
 
 import java.math.BigDecimal;
+import java.sql.SQLType;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.annotations.UuidGenerator;
+import org.hibernate.type.SqlTypes;
 
 import com.springlearning.spring_7_rest_mvc.model.BeerStyle;
 
@@ -36,7 +39,8 @@ public class Beer {
     @GeneratedValue(generator = "UUID")
 //    @GenericGenerator(name = "UUID" , strategy = "org.hibernate.id.UUIDGenerator")
     @UuidGenerator
-    @Column(length = 36, columnDefinition = "varchar", updatable = false, nullable = false)
+    @Column(length = 36, columnDefinition = "varchar(36)", updatable = false, nullable = false)
+    @JdbcTypeCode(SqlTypes.CHAR)
 	private UUID id;
     @Version
 	private Integer version;
