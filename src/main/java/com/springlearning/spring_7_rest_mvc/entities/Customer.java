@@ -43,6 +43,10 @@ public class Customer {
 	@Size(max = 60)
 	@Column(length = 60)
 	private String customerName;
+
+	@Column(length = 255)
+	private String email;
+	
 	@Version
 	private Integer version;
 	private LocalDateTime createdDate;
