@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import com.springlearning.spring_7_rest_mvc.mappers.BeerMapper;
 import com.springlearning.spring_7_rest_mvc.mappers.CustomerMapper;
@@ -69,9 +70,18 @@ public class CustomerServiceJPA implements CustomerService{
 	}
 
 	@Override
-	public void patchCustomerById(UUID customerId, CustomerDTO customerDTO) {
-		// TODO Auto-generated method stub
+	public Optional<CustomerDTO> patchCustomerById(UUID customerId, CustomerDTO customerDTO) {
 		
+		AtomicReference<Optional<CustomerDTO>> atomicReference = new AtomicReference<>();
+		customerRepository.findById(customerId).ifPresentOrElse(foundCustomer -> {
+			if(StringUtils.hasText(customerDTO.getCustomerName())) {
+				foundCustomer.setCustomerName(customerDTO.getCustomerName());
+			}
+			atomicReference.set(Optional.of(customerMapper.customerToCustomerDto(customerRepository.save(foundCustomer))));
+		}, () ->{
+			atomicReference.set(Optional.empty());
+		});
+		return atomicReference.get();
 	}
 
 }

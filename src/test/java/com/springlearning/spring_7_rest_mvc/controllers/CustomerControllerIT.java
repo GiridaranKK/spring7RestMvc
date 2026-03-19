@@ -1,17 +1,30 @@
 package com.springlearning.spring_7_rest_mvc.controllers;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.verify;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatusCode;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.Rollback;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
 
 import com.springlearning.spring_7_rest_mvc.entities.Customer;
 import com.springlearning.spring_7_rest_mvc.mappers.CustomerMapper;
@@ -20,6 +33,8 @@ import com.springlearning.spring_7_rest_mvc.model.CustomerDTO;
 import com.springlearning.spring_7_rest_mvc.repositories.CustomerRepository;
 
 import jakarta.transaction.Transactional;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.ObjectMapper;
 
 @SpringBootTest
 public class CustomerControllerIT {
@@ -32,6 +47,19 @@ public class CustomerControllerIT {
 	
 	@Autowired
 	CustomerMapper customerMapper;
+	
+	@Autowired
+	WebApplicationContext wac;
+	
+	@Autowired
+	ObjectMapper objectMapper;
+	
+	MockMvc mockMvc;
+	
+	@BeforeEach
+	void setup() {
+		mockMvc = MockMvcBuilders.webAppContextSetup(wac).build();
+	}
 	
 	@Test
 	void testListCustomers() {
@@ -125,5 +153,23 @@ public class CustomerControllerIT {
 		assertThrows(NotFoundException.class, () -> {
 			controller.deleteById(UUID.randomUUID());
 		});
+	}
+	
+	@Test
+	void patchCustomerById() throws Exception {
+		Customer customerDTO = customerRepository.findAll().get(0);
+		Map<String, Object> customerMap = new HashMap<>();
+		customerMap.put("customerName", "New Namedserrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrdsssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss");
+		
+		MvcResult mvcResult = mockMvc.perform(patch(CustomerController.CUSTOMER_PATH_ID,customerDTO.getId())
+				.accept(MediaType.APPLICATION_JSON)
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(customerMap)))
+		        .andExpect(status().isBadRequest())
+		        .andExpect(jsonPath("$.length()", is(1)))
+		        .andReturn();
+		
+		System.out.println(mvcResult.getResponse().getContentAsString());
+		
 	}
 }
