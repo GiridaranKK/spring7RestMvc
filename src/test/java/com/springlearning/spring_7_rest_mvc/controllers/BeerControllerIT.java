@@ -4,6 +4,7 @@ package com.springlearning.spring_7_rest_mvc.controllers;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.verify;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -67,7 +68,7 @@ public class BeerControllerIT {
 	
 	@Test
 	void testListBeers() {
-		List<BeerDTO> dtos = beerController.listBeers();
+		List<BeerDTO> dtos = beerController.listBeers(null);
 		
 		assertThat(dtos.size()).isEqualTo(2413);
 	}
@@ -77,7 +78,7 @@ public class BeerControllerIT {
 	@Test
 	void testEmptyList() {
 		beerRepository.deleteAll();
-		List<BeerDTO> dtos = beerController.listBeers();
+		List<BeerDTO> dtos = beerController.listBeers(null);
 		
 		assertThat(dtos.size()).isEqualTo(0);
 	}
@@ -177,5 +178,13 @@ public class BeerControllerIT {
 				.andReturn();
 		
 		System.out.println(result.getResponse().getContentAsString());
+	}
+	
+	@Test
+	void testListBeersByName() throws Exception {
+		mockMvc.perform(get(BeerController.BEER_PATH)
+				.queryParam("beerName", "IPA"))
+		.andExpect(status().isOk())
+		.andExpect(jsonPath("$.size()", is(100)));
 	}
 }

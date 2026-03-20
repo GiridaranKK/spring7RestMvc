@@ -34,7 +34,7 @@ public class BeerServiceJPA implements BeerService {
 	}
 
 	@Override
-	public List<BeerDTO> listBeers() {
+	public List<BeerDTO> listBeers(String beerName) {
 		// TODO Auto-generated method stub
 		return beerRepository.findAll()
 				.stream()

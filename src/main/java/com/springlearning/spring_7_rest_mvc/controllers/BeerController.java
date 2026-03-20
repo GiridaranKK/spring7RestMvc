@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.springlearning.spring_7_rest_mvc.model.BeerDTO;
@@ -53,8 +54,8 @@ public class BeerController {
 	
 //	@RequestMapping(method = RequestMethod.GET)
 	@GetMapping(BEER_PATH)
-	public List<BeerDTO> listBeers(){
-		return beerService.listBeers();
+	public List<BeerDTO> listBeers(@RequestParam(required = false) String beerName){
+		return beerService.listBeers(null);
 	}
 	
 	@PostMapping(BEER_PATH)
