@@ -2,6 +2,8 @@
     drop table if exists beer;
 
     drop table if exists customer;
+    
+    DROP TABLE if exists flyway_schema_history;
 
     create table beer (
         beer_style smallint not null check ((beer_style between 0 and 3)),
@@ -11,7 +13,7 @@
         updated_date datetime(6),
         id varchar(36) not null,
         beer_name varchar(50) not null,
-        quantity_on_hand varchar(255),
+        quantity_on_hand Integer,
         upc varchar(255) not null,
         primary key (id)
     ) engine=InnoDB;

@@ -9,6 +9,7 @@ import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
 
 import com.springlearning.spring_7_rest_mvc.repositories.BeerRepository;
 import com.springlearning.spring_7_rest_mvc.repositories.CustomerRepository;
+import com.springlearning.spring_7_rest_mvc.services.BeerCsvService;
 import com.springlearning.spring_7_rest_mvc.services.BeerService;
 
 @DataJpaTest
@@ -20,11 +21,14 @@ public class BootstrapDataTest {
 	@Autowired
 	CustomerRepository customerRepository;
 	
+	@Autowired
+	BeerCsvService beerCsvService;
+	
 	BootstrapData bootstrapData;
 	
 	@BeforeEach
 	void setUp() {
-		bootstrapData = new BootstrapData(beerRepository, customerRepository);
+		bootstrapData = new BootstrapData(beerRepository, customerRepository,beerCsvService);
 	}
 	
 	@Test

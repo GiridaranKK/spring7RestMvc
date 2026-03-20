@@ -59,7 +59,7 @@ public class Beer {
     @NotBlank
 	private String upc;
    
-	private String quantityOnHand;
+	private Integer quantityOnHand;
 	@NotNull
 	private BigDecimal price;
 	private LocalDateTime createdDate;
