@@ -5,12 +5,13 @@ import java.util.Optional;
 import java.util.UUID;
 
 import com.springlearning.spring_7_rest_mvc.model.BeerDTO;
+import com.springlearning.spring_7_rest_mvc.model.BeerStyle;
 
 public interface BeerService {
 
 	Optional<BeerDTO> getBeerById(UUID id);
 
-	List<BeerDTO> listBeers(String beerName);
+	List<BeerDTO> listBeers(String beerName, BeerStyle beerStyle, Boolean showInventory);
 
 	BeerDTO saveNewBeer(BeerDTO beerDTO);
 

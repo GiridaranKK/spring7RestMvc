@@ -1,5 +1,6 @@
 package com.springlearning.spring_7_rest_mvc.services;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -11,8 +12,10 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import com.springlearning.spring_7_rest_mvc.entities.Beer;
 import com.springlearning.spring_7_rest_mvc.mappers.BeerMapper;
 import com.springlearning.spring_7_rest_mvc.model.BeerDTO;
+import com.springlearning.spring_7_rest_mvc.model.BeerStyle;
 import com.springlearning.spring_7_rest_mvc.repositories.BeerRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -34,12 +37,42 @@ public class BeerServiceJPA implements BeerService {
 	}
 
 	@Override
-	public List<BeerDTO> listBeers(String beerName) {
+	public List<BeerDTO> listBeers(String beerName, BeerStyle beerStyle, Boolean showInventory) {
 		// TODO Auto-generated method stub
-		return beerRepository.findAll()
-				.stream()
+		List<Beer> beerList;
+		if(StringUtils.hasText(beerName) && beerStyle == null) {
+			beerList = listBeersByName(beerName);
+		}
+		else if(!StringUtils.hasText(beerName) && beerStyle != null) {
+			beerList = listBeersByStyle(beerStyle);
+		}
+		else if(StringUtils.hasText(beerName) && beerStyle != null) {
+			beerList = listBeersByStyleAndName(beerName,beerStyle);
+		}
+		else {
+			beerList = beerRepository.findAll();
+		}
+		
+		if(showInventory != null && !showInventory) {
+			beerList.forEach(beer -> beer.setQuantityOnHand(null));
+		}
+		return beerList.stream()
 				.map(beerMapper::BeerToBeerDto)
 				.collect(Collectors.toList());
+	}
+	
+	private List<Beer> listBeersByStyleAndName(String beerName, BeerStyle beerStyle) {
+		return beerRepository.findAllByBeerNameIsLikeIgnoreCaseAndBeerStyle("%"+beerName+"%", beerStyle);
+	}
+
+	public List<Beer> listBeersByName(String beerName){
+		return beerRepository.findAllByBeerNameIsLikeIgnoreCase("%"+beerName+"%");
+		
+	}
+	
+	public List<Beer> listBeersByStyle(BeerStyle beerStyle){
+		return beerRepository.findAllByBeerStyle(beerStyle);
+		
 	}
 
 	@Override

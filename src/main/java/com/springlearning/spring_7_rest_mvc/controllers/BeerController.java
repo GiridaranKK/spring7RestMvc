@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.springlearning.spring_7_rest_mvc.model.BeerDTO;
+import com.springlearning.spring_7_rest_mvc.model.BeerStyle;
 import com.springlearning.spring_7_rest_mvc.services.BeerService;
 
 import lombok.AllArgsConstructor;
@@ -54,8 +55,8 @@ public class BeerController {
 	
 //	@RequestMapping(method = RequestMethod.GET)
 	@GetMapping(BEER_PATH)
-	public List<BeerDTO> listBeers(@RequestParam(required = false) String beerName){
-		return beerService.listBeers(null);
+	public List<BeerDTO> listBeers(@RequestParam(required = false) String beerName, @RequestParam(required = false) BeerStyle beerStyle,@RequestParam(required = false) Boolean showInventory){
+		return beerService.listBeers(beerName, beerStyle, showInventory);
 	}
 	
 	@PostMapping(BEER_PATH)

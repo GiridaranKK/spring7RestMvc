@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import org.hamcrest.core.IsNull;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,12 +30,15 @@ import org.springframework.test.web.servlet.MockMvcBuilder;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
+
+
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 import com.jayway.jsonpath.JsonPath;
 import com.springlearning.spring_7_rest_mvc.entities.Beer;
 import com.springlearning.spring_7_rest_mvc.mappers.BeerMapper;
 import com.springlearning.spring_7_rest_mvc.model.BeerDTO;
+import com.springlearning.spring_7_rest_mvc.model.BeerStyle;
 import com.springlearning.spring_7_rest_mvc.repositories.BeerRepository;
 
 import jakarta.transaction.Transactional;
@@ -68,7 +72,7 @@ public class BeerControllerIT {
 	
 	@Test
 	void testListBeers() {
-		List<BeerDTO> dtos = beerController.listBeers(null);
+		List<BeerDTO> dtos = beerController.listBeers(null, null, null);
 		
 		assertThat(dtos.size()).isEqualTo(2413);
 	}
@@ -78,7 +82,7 @@ public class BeerControllerIT {
 	@Test
 	void testEmptyList() {
 		beerRepository.deleteAll();
-		List<BeerDTO> dtos = beerController.listBeers(null);
+		List<BeerDTO> dtos = beerController.listBeers(null, null, null);
 		
 		assertThat(dtos.size()).isEqualTo(0);
 	}
@@ -185,6 +189,47 @@ public class BeerControllerIT {
 		mockMvc.perform(get(BeerController.BEER_PATH)
 				.queryParam("beerName", "IPA"))
 		.andExpect(status().isOk())
-		.andExpect(jsonPath("$.size()", is(100)));
+		.andExpect(jsonPath("$.size()", is(336)));
 	}
+	
+	@Test
+	void testListBeerBySTyle() throws Exception {
+		mockMvc.perform(get(BeerController.BEER_PATH)
+				.queryParam("beerStyle", BeerStyle.PILSNER.name()))
+		.andExpect(status().isOk())
+		.andExpect(jsonPath("$.size()", is(1160)));
+	}
+	
+	@Test
+	void testListBeerByStyleAndNameShowInventoryTrue() throws Exception {
+		mockMvc.perform(get(BeerController.BEER_PATH)
+				.queryParam("beerName", "IPA")
+				.queryParam("beerStyle", BeerStyle.IPA.name())
+				.queryParam("showInventory", "true"))
+		.andExpect(status().isOk())
+		.andExpect(jsonPath("$.size()", is(310)))
+		.andExpect(jsonPath("$.[0].quantityOnHand").value(IsNull.notNullValue()));
+	}
+	
+	@Test
+	void testListBeerByStyleAndNameShowInventoryFalse() throws Exception {
+		mockMvc.perform(get(BeerController.BEER_PATH)
+				.queryParam("beerName", "IPA")
+				.queryParam("beerStyle", BeerStyle.IPA.name())
+				.queryParam("showInventory", "false"))
+		.andExpect(status().isOk())
+		.andExpect(jsonPath("$.size()", is(310)))
+		.andExpect(jsonPath("$.[0].quantityOnHand").value(IsNull.nullValue()));
+	}
+	
+	@Test
+	void testListBeerByStyleAndName() throws Exception {
+		mockMvc.perform(get(BeerController.BEER_PATH)
+				.queryParam("beerName", "IPA")
+				.queryParam("beerStyle", BeerStyle.IPA.name()))
+		.andExpect(status().isOk())
+		.andExpect(jsonPath("$.size()", is(310)));
+	}
+	
+	
 }
