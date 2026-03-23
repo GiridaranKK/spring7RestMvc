@@ -37,7 +37,7 @@ public class BeerServiceJPA implements BeerService {
 	}
 
 	@Override
-	public List<BeerDTO> listBeers(String beerName, BeerStyle beerStyle, Boolean showInventory) {
+	public List<BeerDTO> listBeers(String beerName, BeerStyle beerStyle, Boolean showInventory, Integer pageNumber, Integer pageSize) {
 		// TODO Auto-generated method stub
 		List<Beer> beerList;
 		if(StringUtils.hasText(beerName) && beerStyle == null) {
