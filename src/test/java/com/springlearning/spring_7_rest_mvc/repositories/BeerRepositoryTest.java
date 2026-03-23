@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.data.domain.Page;
 
 import com.springlearning.spring_7_rest_mvc.bootstrap.BootstrapData;
 import com.springlearning.spring_7_rest_mvc.entities.Beer;
@@ -44,14 +45,14 @@ public class BeerRepositoryTest {
 	
 	@Test
 	void testGetBeerListByName() {
-		List<Beer> list = beerRepository.findAllByBeerNameIsLikeIgnoreCase("%IPA%");
-		assertThat(list.size()).isEqualTo(336);
+		Page<Beer> list = beerRepository.findAllByBeerNameIsLikeIgnoreCase("%IPA%", null);
+		assertThat(list.getContent().size()).isEqualTo(336);
 	}
 	
 	@Test
 	void testGetBeerListByStyle() {
-		List<Beer> list = beerRepository.findAllByBeerStyle(BeerStyle.PILSNER);
-		assertThat(list.size()).isEqualTo(1160);
+		Page<Beer> list = beerRepository.findAllByBeerStyle(BeerStyle.PILSNER, null);
+		assertThat(list.getContent().size()).isEqualTo(1160);
 	}
 	
 }

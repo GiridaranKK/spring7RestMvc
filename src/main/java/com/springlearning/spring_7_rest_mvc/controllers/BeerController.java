@@ -1,9 +1,9 @@
 package com.springlearning.spring_7_rest_mvc.controllers;
 
 import java.net.http.HttpRequest;
-import java.util.List;
 import java.util.UUID;
 
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -55,7 +55,7 @@ public class BeerController {
 	
 //	@RequestMapping(method = RequestMethod.GET)
 	@GetMapping(BEER_PATH)
-	public List<BeerDTO> listBeers(@RequestParam(required = false) String beerName, 
+	public Page<BeerDTO> listBeers(@RequestParam(required = false) String beerName, 
 								   @RequestParam(required = false) BeerStyle beerStyle,
 								   @RequestParam(required = false) Boolean showInventory, 
 								   @RequestParam(required = false) Integer pageNumber, 
