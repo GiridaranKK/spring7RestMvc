@@ -3,10 +3,10 @@
 
     drop table if exists customer;
     
-    DROP TABLE if exists flyway_schema_history;
+--    DROP TABLE if exists flyway_schema_history;
 
     create table beer (
-        beer_style smallint not null check ((beer_style between 0 and 3)),
+        beer_style smallint not null,
         price decimal(38,2) not null,
         version integer,
         created_date datetime(6),
